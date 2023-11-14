@@ -19,7 +19,7 @@ referral = Table(
 class Referral(Base):
     __tablename__ = 'referral'
     
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     referring_user_id = Column(Integer, ForeignKey(user.c.id))
     referred_user_id = Column(Integer, ForeignKey(user.c.id))
     referral_code = Column(String, unique=True)

@@ -2,6 +2,9 @@ from fastapi import FastAPI, Depends
 from app.auth.base_config import auth_backend, fastapi_users
 from app.auth.schemas import UserRead, UserCreate, UserUpdate
 from app.subscription.router import router as subscription_router
+from app.referral_system.router import router as referral_system_router
+from app.auth.models import User
+
 
 
 app = FastAPI()
@@ -24,5 +27,11 @@ app.include_router(
 )
 
 app.include_router(
-    subscription_router
+    subscription_router,
+    prefix="/subscription",
+    tags=["subscription"]
+)
+
+app.include_router(
+    referral_system_router,
 )

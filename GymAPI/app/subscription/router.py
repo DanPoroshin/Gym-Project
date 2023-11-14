@@ -14,20 +14,16 @@ router = APIRouter(
 )
 
 
-@router.get("/get_subscription")
-async def get_subscription(id: int, session: AsyncSession = Depends(get_async_session)):
-    statement = update(user_table).where(
-        user_table.c.id == id).values(is_subscribed=True)
-    await session.execute(statement)
+@router.post('/subscribe', status_code=200)
+async def subscribe(user: User = Depends(current_user), session: AsyncSession = Depends(get_async_session)):
+    user.is_subscribed = True
+    session.add(user)
     await session.commit()
+    return 'success'
 
-    return {"message": "success"}
-
-
-@router.get("/referral")
-async def get_referral(user: User = Depends(current_user), session: AsyncSession = Depends(get_async_session)):
-    id = user.id
-    query = select(user_table.c.referral).where(user_table.c.id == id)
-    result = await session.execute(query)
-    result = result.scalar()
-    return result
+@router.post('/unsubscribe', status_code=200)
+async def unsubscribe(user: User = Depends(current_user), session: AsyncSession = Depends(get_async_session)):
+    user.is_subscribed = False
+    session.add(user)
+    await session.commit()
+    return 'success'
