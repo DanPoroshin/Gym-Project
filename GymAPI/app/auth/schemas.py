@@ -1,7 +1,5 @@
 from typing import Optional
 from fastapi_users import schemas
-from secrets import token_urlsafe
-from pydantic import Json
 
 
 class UserRead(schemas.BaseUser[int]):

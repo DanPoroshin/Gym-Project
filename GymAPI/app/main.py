@@ -3,7 +3,6 @@ from app.auth.base_config import auth_backend, fastapi_users
 from app.auth.schemas import UserRead, UserCreate, UserUpdate
 from app.subscription.router import router as subscription_router
 from app.referral_system.router import router as referral_system_router
-from app.auth.models import User
 
 
 app = FastAPI()
