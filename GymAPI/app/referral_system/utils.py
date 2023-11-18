@@ -7,8 +7,7 @@ from fastapi import Depends
 from app.auth.utils import get_user_db
 
 
-async def get_user_by_referral(referral_code: str, session = get_user_db()):
+async def get_user_by_referral_code(referral_code: str, session):
     query = select(user).where(user.c.referral_code == referral_code)
     result = await session.execute(query)
-    return result.scalar()
-
+    return {'message': 'success'} if result else None

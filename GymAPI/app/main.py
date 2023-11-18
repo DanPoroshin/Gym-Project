@@ -6,7 +6,6 @@ from app.referral_system.router import router as referral_system_router
 from app.auth.models import User
 
 
-
 app = FastAPI()
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
@@ -27,9 +26,7 @@ app.include_router(
 )
 
 app.include_router(
-    subscription_router,
-    prefix="/subscription",
-    tags=["subscription"]
+    subscription_router
 )
 
 app.include_router(
