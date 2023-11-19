@@ -5,7 +5,8 @@ from fastapi_users import schemas
 class UserRead(schemas.BaseUser[int]):
     id: int
     email: str
-    full_name: str
+    name: str
+    surname: str
     is_subscribed: bool
 
     class Config:
@@ -13,13 +14,14 @@ class UserRead(schemas.BaseUser[int]):
 
 
 class UserCreate(schemas.BaseUserCreate):
-    full_name: str
+    name: str
+    surname: str
     email: str
     password: str
 
 
 class UserUpdate(schemas.BaseUserUpdate):
-    full_name: Optional[str]
+    name: Optional[str]
+    surname: Optional[str]
     email: Optional[str]
     password: Optional[str]
-    is_subscribed: Optional[bool]

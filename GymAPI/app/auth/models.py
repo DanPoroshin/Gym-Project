@@ -11,7 +11,8 @@ user = Table(
     "user",
     metadata,
     Column("id", Integer, primary_key=True),
-    Column("full_name", String, nullable=False),
+    Column("name", String, nullable=False),
+    Column("surname", String, nullable=False),
     Column("email", String, nullable=False),
     Column("hashed_password", String, nullable=False),
     Column("is_subscribed", Boolean, default=False, nullable=False),
@@ -28,7 +29,8 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     __tablename__ = "user"
 
     id = Column(Integer, primary_key=True)
-    full_name = Column(String, nullable=False)
+    name = Column(String, nullable=False)
+    surname = Column(String, nullable=False)
     email = Column(String, nullable=False)
     hashed_password: str = Column(String(length=1024), nullable=False)
     is_subscribed = Column(Boolean, default=False, nullable=False)
