@@ -18,7 +18,7 @@ class UserCreate(schemas.BaseUserCreate):
     surname: str
     email: str
     password: str
-
+    
 
 class UserUpdate(schemas.BaseUserUpdate):
     name: Optional[str]
