@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_async_session
@@ -24,13 +24,13 @@ async def add_referral_operation(referral_code: str, session: AsyncSession = Dep
     result = await session.execute(query)
 
     if result.all():
-        return {"message": "You have already claimed a referral code."}
+        raise HTTPException(status_code=400, detail="You have already claimed a referral code.")
     
     if referral_owner_id is None:
-        return {"message": "Invalid referral code."}
-
+        raise HTTPException(status_code=400, detail="Invalid referral code.")
+    
     if curr_user_id == referral_owner_id:
-        return {"message": "You cannot refer yourself."}
+        raise HTTPException(status_code=400, detail="You cannot claim your own referral code.")
 
     referral_stmt = Referral(
         referral_claimer_id=curr_user_id,
@@ -45,7 +45,10 @@ async def add_referral_operation(referral_code: str, session: AsyncSession = Dep
     await session.execute(user_stmt)
     session.add(referral_stmt)
     await session.commit()
-    return {"message": "Referral claimed successfully."}
+    return {
+        "status_code": "200",
+        "details": "Referral claimed successfully.",
+        }
 
 @router.get('/referral_info')
 async def get_referral_info(session: AsyncSession = Depends(get_async_session), curr_user: User = Depends(current_user)):

@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
+
 from app.auth.base_config import auth_backend, fastapi_users
 from app.auth.schemas import UserRead, UserCreate, UserUpdate
 from app.subscription.router import router as subscription_router
@@ -8,7 +9,7 @@ from app.referral_system.router import router as referral_system_router
 app = FastAPI()
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
-    prefix="/auth/jwt",
+    prefix="/auth",
     tags=["auth"],
 )
 

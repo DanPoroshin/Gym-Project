@@ -21,7 +21,10 @@ async def subscribe(curr_user: User = Depends(current_user), session: AsyncSessi
     await session.execute(stmt)
     await session.commit()
 
-    return {'message': 'You are now subscribed.'}
+    return {
+        "status_code": "200",
+        "details": "You are now subscribed."
+    }
 
 @router.post('/unsubscribe', status_code=200)
 async def unsubscribe(curr_user: User = Depends(current_user), session: AsyncSession = Depends(get_async_session)):
@@ -31,4 +34,7 @@ async def unsubscribe(curr_user: User = Depends(current_user), session: AsyncSes
     await session.execute(stmt)
     await session.commit()
     
-    return {'message': 'You are now unsubscribed.'}
+    return {
+        "status_code": "200",
+        "details": "You are now unsubscribed."
+    }
