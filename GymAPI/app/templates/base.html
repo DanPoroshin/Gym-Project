@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -22,7 +22,7 @@
             
         {% else %}
             <ul class="flex gap-5 mr-10">
-                <li><button>Выход</button></li>
+                <li><button id="logout">Выход</button></li>
             </ul>
         {% endif %}
     </nav>
@@ -30,5 +30,18 @@
     <div id="content">
         {% block content %}{% endblock %}
     </div>
+    <script>
+        document.getElementById("logout").addEventListener("click", function() {
+          fetch('http://127.0.0.1:8000/auth/logout', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+          .then(data => {
+            window.location.href = "/home";
+          })
+        });
+    </script>
 </body>
 </html>
