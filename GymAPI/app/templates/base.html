@@ -12,16 +12,17 @@
 <body>
     <nav class="flex justify-between text-3xl my-3">
         <ul class="flex ml-10">
-            <li><a href="{{ url_for('home') }}">Главная</a></li>
+            <li><a href="">Главная</a></li>
         </ul>
-        {% if current_user.is_authenticated %}
+        {% if curr_user == None %}
             <ul class="flex gap-5 mr-10">
-                <li><a href="{{ url_for('logout') }}">Выход</a></li>
+                <li><a href="">Вход</a></li>
+                <li><a href="">Регистрация</a></li>
             </ul>
+            
         {% else %}
             <ul class="flex gap-5 mr-10">
-                <li><a href="{{ url_for('login') }}">Вход</a></li>
-                <li><a href="{{ url_for('register') }}">Регистрация</a></li>
+                <li><button>Выход</button></li>
             </ul>
         {% endif %}
     </nav>

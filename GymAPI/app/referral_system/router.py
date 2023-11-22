@@ -55,3 +55,7 @@ async def get_referral_info(session: AsyncSession = Depends(get_async_session), 
     query = select(func.count()).where(referral.c.referral_owner_id == curr_user.id and referral.c.used == True)
     result = await session.execute(query)
     return result.scalar()
+
+@router.get('/test')
+async def test(curr_user: User = Depends(current_user)):
+    return curr_user

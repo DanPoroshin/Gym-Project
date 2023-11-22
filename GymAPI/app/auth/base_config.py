@@ -25,3 +25,4 @@ fastapi_users = FastAPIUsers[User, int](
 )
 
 current_user = fastapi_users.current_user()
+optional_current_user = fastapi_users.current_user(optional=True)
