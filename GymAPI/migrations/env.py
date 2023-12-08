@@ -1,12 +1,10 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 
-from app.config import DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS
 from app.auth.models import metadata as auth_metadata
+from app.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 from app.referral_system.models import metadata as referral_metadata
 
 # this is the Alembic Config object, which provides

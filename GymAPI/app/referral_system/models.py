@@ -1,7 +1,9 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, TIMESTAMP, Table, MetaData
-from app.database import Base
 
+from sqlalchemy import (TIMESTAMP, Boolean, Column, ForeignKey, Integer,
+                        MetaData, String, Table)
+
+from app.database import Base
 
 metadata = MetaData()
 

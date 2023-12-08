@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="flex items-center justify-center">
+    <div class="w-full max-w-md">
+        <form id="loginForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-20 rounded-3xl">
+            <h2 class="text-2xl font-bold mb-6">Войти</h2>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                    Email
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="username" type="text" placeholder="Введите ваш Email">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                    Пароль
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="password" type="password" placeholder="Введите ваш пароль">
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button id="loginButton"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit">
+                    Войти
+                </button>
+
+                <!-- Link to sign up page -->
+                <p class="text-sm text-gray-600">Нет аккаунта? <a href="/signup"
+                        class="text-blue-500 hover:underline">Регистрация</a>.</p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        fetch('/auth/login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `username=${username}&password=${password}`,
+        })
+            .then(response => {
+                if (response.status === 204) {
+                    // No content, but successful login, so redirect.
+                    window.location.href = "/";
+                } else if (!response.ok) {
+                    throw new Error('Login failed with status: ' + response.status);
+                } else {
+                    // If you expect JSON on other success statuses, handle it here
+                    return response.json();
+                }
+            })
+            .then(data => {
+                if (data) {
+                    console.log(data.message);
+                    // If there's data, you can handle it before redirecting.
+                }
+                // Redirect if necessary, depending on your use case.
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle errors here, such as displaying a message to the user
+            });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="flex items-center justify-center bg-transparent">
+    <!-- User Data window -->
+    <div class="w-3/4 h-[80vh] bg-white shadow-md rounded-3xl p-8 mr-8">
+        <!-- Content for the User Data window goes here -->
+        <h2 class="text-2xl font-bold mb-6">Профиль</h2>
+        <p class="text-gray-700"><strong>Имя:</strong> {{ curr_user.name }}</p>
+        <p class="text-gray-700"><strong>Фамилия:</strong> {{ curr_user.surname }}</p>
+        <p class="text-gray-700"><strong>Email:</strong> {{ curr_user.email }}</p>
+        <!-- Add more user data fields as needed -->
+    </div>
+
+    <!-- Subscription window -->
+    <div class="flex flex-col w-1/4">
+        <div class="mb-4 h-1/2 bg-white shadow-md rounded-3xl p-8">
+            <!-- Content for the Subscription window goes here -->
+            <h3 class="text-xl font-bold mb-4">Абонемент</h3>
+            <p class="text-gray-700">Статус абонемента: {% if subscription_status %} Активен {% else %} Неактивен {%
+                endif %}</p>
+            <!-- Add more subscription status details -->
+            <button id="subscribeButton"
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Оформить
+            </button>
+            <button id="unsubscribeButton"
+                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Отменить
+            </button>
+        </div>
+
+        <div class="h-1/2 bg-white shadow-md rounded-3xl p-8">
+            <!-- Content for the Referral window goes here -->
+            <h3 class="text-xl font-bold mb-4">Реферальная программа</h3>
+            <p class="text-gray-700 mt-2">Ваш код: {{ referral_code }}</p>
+            <p class="text-gray-700 mt-2">Кол-во использований: {{ referral_code_used_count }}</p>
+            <p class="text-gray-700 mt-2 mb-2">Активные рефералы: {{ active_referrals }}</p>
+            <div class="flex flex-col">
+                <input id="referralInput" type="text" placeholder="Введите код"
+                    class="border-2 border-blue-500 rounded py-2 px-4 mb-2">
+                <button id="claimReferralButton"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Применить
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Handle subscribe button click
+    document.getElementById('subscribeButton').addEventListener('click', function () {
+        // Send subscribe request to the backend
+        fetch('/subscription/subscribe', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Update subscription status on the page;
+                    location.reload();
+                } else {
+                    // Handle subscribe failure
+                    console.error('Subscribe Error:', response.status);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle errors
+            });
+    });
+
+    // Handle unsubscribe button click
+    document.getElementById('unsubscribeButton').addEventListener('click', function () {
+        // Send unsubscribe request to the backend
+        fetch('/subscription/unsubscribe', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Update subscription status on the page;
+                    location.reload();
+                } else {
+                    // Handle unsubscribe failure
+                    console.error('Unsubscribe Error:', response.status);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle errors
+            });
+    });
+
+    // Handle claim referral button click
+    document.getElementById('claimReferralButton').addEventListener('click', function () {
+        const referralCode = document.getElementById('referralInput').value;
+
+        // Send claim request to the backend
+        fetch('/referral/claim_referral', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 'code': referralCode }),
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Assuming the response contains JSON data with the updated referral code
+                    return response.json();
+                } else {
+                    // Handle claim failure
+                    console.error('Claim Error:', response.status);
+                }
+            })
+            .then(data => {
+                // Update referral code on the page using data
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle errors
+            });
+    });
+
+</script>
+
+
+{% endblock %}

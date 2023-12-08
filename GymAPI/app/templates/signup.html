@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="flex items-center justify-center bg-transparent">
+    <div class="w-full max-w-md">
+        <form id="signupForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-20 rounded-3xl">
+            <h2 class="text-2xl font-bold mb-6">Регистрация</h2>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                    Имя
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="name" type="text" placeholder="Введите ваше имя">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="surname">
+                    Фамилия
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="surname" type="text" placeholder="Введите вашу фамилию">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                    Email
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="email" type="email" placeholder="Введите ваш Email">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                    Пароль
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="password" type="password" placeholder="Придумайте пароль">
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button id="signupButton"
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit">
+                    Регистрация
+                </button>
+
+                <p class="text-sm text-gray-600">Есть аккаунт? <a href="/login"
+                        class=" text-blue-500 hover:underline">Вход</a>.</p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('signupForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const name = document.getElementById('name').value;
+        const surname = document.getElementById('surname').value;
+
+        const data = {
+            email: email,
+            password: password,
+            is_active: true,
+            is_superuser: false,
+            is_verified: false,
+            name: name,
+            surname: surname
+        };
+
+        fetch('/auth/register/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Perform login after successful signup
+                    return fetch('/auth/login/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `username=${email}&password=${password}`,
+                    });
+                } else {
+                    // Handle other response statuses (e.g., display an error message)
+                    console.error('Error:', response.status);
+                }
+            })
+            .then(loginResponse => {
+                if (loginResponse.ok) {
+                    // Redirect to the home page if login is successful
+                    window.location.replace("/");
+                } else {
+                    // Handle login failure
+                    console.error('Login Error:', loginResponse.status);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle errors
+            });
+    });
+</script>
+
+{% endblock %}

@@ -1,47 +1,97 @@
-<!doctype html>
-<html lang="ru">
+<!-- base.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    {% block head %}{% endblock %}
-    <title>Главная</title>
+    <title>{% block title %}Your Website Title{% endblock %}</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300&family=Oswald:wght@300&family=Poppins:wght@300;400&family=Roboto:wght@300&display=swap"
+        rel="stylesheet">
 </head>
-<body>
-    <nav class="flex justify-between text-3xl my-3">
-        <ul class="flex ml-10">
-            <li><a href="">Главная</a></li>
-        </ul>
-        {% if curr_user == None %}
-            <ul class="flex gap-5 mr-10">
-                <li><a href="">Вход</a></li>
-                <li><a href="">Регистрация</a></li>
-            </ul>
-            
-        {% else %}
-            <ul class="flex gap-5 mr-10">
-                <li><button id="logout">Выход</button></li>
-            </ul>
-        {% endif %}
-    </nav>
-    <hr>
-    <div id="content">
+
+<body class="font-[Roboto] text-xl bg-[#EBF2FA] h-screen">
+    <header class="bg-blue-500 text-[#EBF2FA] font-bold">
+        <nav class="flex justify-between items-center w-[92%] bg-transparent">
+            <div>
+                <a href="/">
+                    <img class=" w-64 pt-px pb-px" src="{{ url_for('static', path='logo.png') }}">
+                </a>
+            </div>
+            <div
+                class="nav-links duration-500 md:static absolute bg-transparent md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto  w-full flex items-center px-5">
+                <ul class="flex md:flex-row flex-col md:items-center md:gap-[4vw] gap-8">
+                    <li>
+                        <a class="hover:text-gray-400 text-3xl" href="/">Главная</a>
+                    </li>
+                    <li>
+                        <a class="hover:text-gray-400 text-3xl" href="/about">О нас</a>
+                    </li>
+                    <li>
+                        <a class="hover:text-gray-400 text-3xl" href="/contact">Контакты</a>
+                    </li>
+                    {% if curr_user %}
+                    <li>
+                        <a class="hover:text-gray-400 text-3xl" href="/profile">Профиль</a>
+                    </li>
+                    {% endif %}
+                </ul>
+
+            </div>
+            <div>
+                {% if curr_user %}
+                <button id="logout"
+                    class="bg-blue-600 hover:bg-blue-700 rounded-md px-6 py-3 text-white focus:shadow-outline text-3xl shadow-md">Выход</button>
+                {% else %}
+                <button id="login"
+                    class="bg-blue-600 hover:bg-blue-700 rounded-md px-6 py-3 text-white focus:shadow-outline text-3xl shadow-md">Вход</button>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- Content of the specific page goes here -->
+    <div class="container mx-auto p-4">
         {% block content %}{% endblock %}
     </div>
+
+    {% if curr_user %}
     <script>
-        document.getElementById("logout").addEventListener("click", function() {
-          fetch('http://127.0.0.1:8000/auth/logout', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-          .then(data => {
-            window.location.href = "/home";
-          })
+        const logoutButton = document.getElementById('logout').addEventListener('click', function () {
+            fetch('/auth/logout/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Perform login after successful signup
+                        window.location.replace("/");
+                    } else {
+                        // Handle other response statuses (e.g., display an error message)
+                        console.error('Error:', response.status);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Handle errors
+                });
         });
     </script>
+
+    {% else %}
+
+    <script>
+        const loginButton = document.getElementById('login').addEventListener('click', function () {
+            window.location.replace("/login");
+        });
+    </script>
+    {% endif %}
+
 </body>
+
 </html>
